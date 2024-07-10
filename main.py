@@ -28,7 +28,7 @@ app.secret_key = 'secret'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'  
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'exampleprojectcs@gmail.c' 
+app.config['MAIL_USERNAME'] = 'exampleproject@gmail.com' 
 app.config['MAIL_PASSWORD'] = 'rfbw euew poor smdf'
 app.config['MAIL_DEFAULT_SENDER'] = 'exampleproject@gmail.com'
 
