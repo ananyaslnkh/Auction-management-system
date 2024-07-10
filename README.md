@@ -1,5 +1,5 @@
 # Auction-management-system
-Python project
+Python project using flask framework
 
 # Problem statement:
 The traditional methods of conducting car auctions often face challenges in managing the auction process efficiently. These issues hinder the smooth functioning of the auction process and lead to suboptimal outcomes for both sellers and buyers.
