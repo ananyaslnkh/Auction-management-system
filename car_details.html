@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Details - CarBid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .car-details-container {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 60%;
+        }
+
+        .car-details-container h2 {
+            margin-bottom: 10px;
+        }
+
+        .car-details-info {
+            margin-bottom: 20px;
+        }
+
+        .car-details-info p {
+            margin: 5px 0;
+        }
+
+        .car-details-photos {
+            width: 35%;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .car-details-photos img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            display: block;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        .car-details-photos img.active {
+            opacity: 1;
+            transform: translateX(0%);
+        }
+
+        .arrow {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .arrow.left {
+            left: 0;
+        }
+
+        .arrow.right {
+            right: 0;
+        }
+
+        .arrow:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        footer {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .red-text {
+            color: red;
+        }
+
+        .bid-button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .bid-button:hover {
+            background-color: #2274ab;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>CarBid</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="car-details-container">
+            <h2>Car Details</h2>
+            {% if car %}
+            <div class="car-details-info">
+                <p>Make: {{ car.make }}</p>
+                <p>Model: {{ car.model }}</p>
+                <p>VIN: {{ car.VIN }}</p>
+                <p>Mileage: {{ car.mileage }}</p>
+                <p>Fuel Type: {{ car.fuel_type }}</p>
+                <p>Condition: {{ car.car_condition }}</p>
+                <p>Starting Bid Price: Rs{{ car.starting_bid_price }}</p>
+                <p id="auction-time" class="red-text"></p>
+                <!--<a href="/user_details?car_id={{ car_id }}">Bid Now</a>-->
+                <form action="/user_details" method="GET" id="bid-form">
+                    <input type="hidden" name="car_id" value="{{ car_id }}">
+                    <button type="submit" class="bid-button" id="bid-now-button">Bid Now</button>
+                </form>
+
+            </div>
+            {% else %}
+            <p>{{ error_message }}</p>
+            {% endif %}
+        </div>
+
+        <div class="car-details-photos">
+            <div class="arrow left">&lt;</div>
+            {% for photo in car_photos %}
+            <img src="{{ url_for('static', filename=photo) }}" alt="Car Photo" {% if loop.index == 1 %}class="active"{% endif %}>
+            {% endfor %}
+            <div class="arrow right">&gt;</div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Carbid. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const photos = document.querySelectorAll('.car-details-photos img');
+        let currentIndex = 0;
+
+        const prevButton = document.querySelector('.arrow.left');
+        const nextButton = document.querySelector('.arrow.right');
+
+        prevButton.addEventListener('click', () => {
+            photos[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+            photos[currentIndex].classList.add('active');
+        });
+
+        nextButton.addEventListener('click', () => {
+            photos[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + 1) % photos.length;
+            photos[currentIndex].classList.add('active');
+        });
+
+        const auctionTimeElement = document.getElementById('auction-time');
+        const bidForm = document.getElementById('bid-form');
+        const bidNowButton = document.getElementById('bid-now-button');
+        const auctionEndTime = new Date('{{ car.auction_end_time }}'); // Assuming auction_end_time is in ISO format
+
+        updateAuctionTime();
+
+        function updateAuctionTime() {
+            const currentTime = new Date(); // Get current date and time
+            const timeRemaining = auctionEndTime.getTime() - currentTime.getTime();
+            if (timeRemaining <= 0) {
+                auctionTimeElement.textContent = 'Auction ended';
+                auctionTimeElement.classList.add('red-text'); // Add red color when auction ended
+                bidForm.classList.add('hidden'); // Hide the bid form
+            } else {
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                auctionTimeElement.textContent = `Auction ending in ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                setTimeout(updateAuctionTime, 1000); // Update every second
+            }
+        }
+    </script>
+</body>
+</html>

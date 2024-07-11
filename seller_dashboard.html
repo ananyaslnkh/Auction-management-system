@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - CarBid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            text-align: left; 
+            padding-left: 20px; 
+        }
+
+        nav {
+            background-color: #2980b9;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+            width: 33.33%;
+        }
+
+        .statistics {
+            background-color: #f1c40f;
+            color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            
+        }
+
+        .statistics-content {
+            margin-bottom: 20px;
+        }
+
+        footer {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .gap1 {
+            margin-bottom: 1000px; /* Increased gap between elements */
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>CarBid</h1>
+        </div>
+    </header>
+
+    <nav>
+        <a href="#">Profile</a>
+        <a href="#">Notifications</a>
+        <a href="/sell_car">Sell Car</a>
+    </nav>
+
+    <div class="container">
+
+        <h2>History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Car</th>
+                    <th>Price</th>
+                    <th>Date Sold</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in past_sales %}
+                <tr>
+                    <td>{{ sale[0] }} {{ sale[1] }}</td>
+                    <td>Rs {{ sale[2] }}</td>
+                    <td>{{ sale[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Current Auction</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Bidder</th>
+                    <th>Bid amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for auction in current_auctions %}
+                <tr>
+                    <td>{{ auction[0] }}</td>
+                    <td>Rs {{ auction[1] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="statistics">
+            <h2>Statistics</h2>
+        </div>
+        <div class="statistics-content">
+            <!-- Include Python code for data analysis and visualization here -->
+            <!-- For example, use Flask to generate dynamic content based on data analysis -->
+            <!-- Display charts using Matplotlib or other libraries -->
+            <img src="{{ url_for('static', filename='plots/current_auction_plot.png') }}" alt="Current Auction Plot">
+            <img src="{{ url_for('static', filename='plots/profit_plot.png') }}" alt="Profit Plot">
+        </div>
+    </div>
+    <div class="gap1"></div>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Carbid. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

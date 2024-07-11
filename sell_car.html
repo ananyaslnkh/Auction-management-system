@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Car - CarBid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto; 
+        }
+
+        header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            text-align: left; 
+            padding-left: 20px; 
+        }
+
+        form {
+            margin-top: 20px;
+            width: 100%; 
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 10px; 
+        }
+
+        form input[type="text"],
+        form input[type="number"],
+        form input[type="date"],
+        form input[type="file"],
+        form textarea,
+        form select {
+            width: calc(100% - 16px); 
+            padding: 8px;
+            margin-bottom: 20px; 
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        form button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #2980b9;
+        }
+
+        footer {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .gap {
+            margin-bottom: 30px; 
+        }
+
+        .gap1 {
+            margin-bottom: 100px; 
+        }
+        
+        .error-message {
+            color: red;
+            margin-top: 10px; 
+        }
+        
+        .success-message {
+            color: green;
+            margin-top: 10px; 
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>CarBid</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 style="text-align: center;">Sell Your Car</h2>
+
+        {% if error_message %}
+        <div class="error-message">{{ error_message }}</div>
+        {% endif %}
+
+        {% if success_message %}
+        <div class="success-message">{{ success_message }}</div>
+        <meta http-equiv="refresh" content="3;url=/seller_dashboard">
+        {% endif %}
+
+        {% if auction_status %}
+        <div class="error-message">{{ auction_status }}</div>
+        {% else %}
+        <form action="/sell_car" method="POST" enctype="multipart/form-data">
+            <label for="make">Make:</label>
+            <input type="text" id="make" name="make" required>
+            
+            <label for="model">Model:</label>
+            <input type="text" id="model" name="model" required>
+
+            <label for="year">Year:</label>
+            <input type="number" id="year" name="year" min="1900" max="2099" required>
+
+            <label for="vin">VIN:</label>
+            <input type="text" id="vin" name="vin" required>
+
+            <label for="mileage">Mileage:</label>
+            <input type="number" id="mileage" name="mileage" min="0" required>
+
+            <label for="fuel_type">Fuel Type:</label>
+            <input type="text" id="fuel_type" name="fuel_type" required>
+
+            <label for="condition">Car Condition:</label>
+            <textarea id="condition" name="condition" rows="4" required></textarea>
+
+            <label for="starting_bid">Starting Bid Price:</label>
+            <input type="number" id="starting_bid" name="starting_bid" min="0" required>
+
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 48%;">
+                    <label for="auction_start">Auction Start Time:</label>
+                    <input type="datetime-local" id="auction_start" name="auction_start" required>
+                </div>
+                <div style="width: 48%;">
+                    <label for="auction_end">Auction End Time:</label>
+                    <input type="datetime-local" id="auction_end" name="auction_end" required>
+                </div>
+            </div>
+            
+            <div class="gap"></div>
+
+            <label for="front_image">Front Image:</label>
+            <input type="file" id="front_image" name="front_image" accept="image/*" required>
+
+            <label for="back_image">Back Image:</label>
+            <input type="file" id="back_image" name="back_image" accept="image/*" required>
+
+            <label for="side_image">Side Image:</label>
+            <input type="file" id="side_image" name="side_image" accept="image/*" required>
+
+            <label for="top_image">Top Image:</label>
+            <input type="file" id="top_image" name="top_image" accept="image/*" required>
+
+            <button type="submit" {% if auction_status %} disabled {% endif %}>Submit</button>
+            <div class="gap1"></div>
+        </form>
+        {% endif %}
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Carbid. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

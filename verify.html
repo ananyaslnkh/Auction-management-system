@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarBid - Verify Email</title>
+    <style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        footer {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .verify-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .verify-section h2 {
+            margin-bottom: 20px;
+        }
+
+        .verify-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .verify-form input[type="text"] {
+            width: 200px;
+            padding: 8px;
+            margin: 0 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+        }
+
+        .success-message {
+            color: green;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>CarBid</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="verify-section">
+            <h2>Verify Email</h2>
+            <p>Please enter the verification code sent to your email:</p>
+            <form action="/verify" method="POST" class="verify-form">
+                <input type="text" id="verification_code" name="verification_code" placeholder="Verification Code" required>
+                <button type="submit">Verify</button>
+            </form>
+            {% if error %}
+            <p class="error-message">{{ error }}</p>
+            {% endif %}
+            {% if success %}
+            <p class="success-message">{{ success }}</p>
+            <meta http-equiv="refresh" content="3;url=/login">
+            {% endif %}
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Carbid. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
